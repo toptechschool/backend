@@ -86,6 +86,7 @@ local_settings.py
 
 *.env
 db.sqlite3
+db.json
 test.txt
 production.env
 
