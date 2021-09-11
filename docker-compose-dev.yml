@@ -20,6 +20,18 @@ services:
     networks:
       - networktts
 
+  db:
+    image: postgres:13.0-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: tts
+      POSTGRES_PASSWORD: tts
+      POSTGRES_DB: tts
+    networks:
+      - networktts
+
 volumes:
   postgres_data:
 
