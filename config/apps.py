@@ -1,6 +1,4 @@
-# Application definition
-
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -8,7 +6,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+]
 
+THIRD_PARTY_APPS = [
     'corsheaders',
     'rest_framework',
     'knox',
@@ -16,10 +16,14 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_yasg',
     'storages',
-    
+]
+
+LOCAL_APPS = [
     'users.apps.UsersConfig',
     'api',
 ]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

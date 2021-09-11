@@ -1,9 +1,6 @@
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:9000"
-]
+import os
 
+CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS").split(" ")
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',

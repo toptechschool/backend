@@ -1,16 +1,17 @@
 from pathlib import Path
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DEBUG = os.environ.get('DEBUG')
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
+if DEBUG: 
+    STATIC_URL = '/static/'
+else:
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_STATIC_LOCATION)
+    DEFAULT_FILE_STORAGE = 'config.custom_storages.MediaStorage'
+    STATICFILES_STORAGE = 'config.custom_storages.StaticStorage'
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+MEDIA_URL = '/media/'   
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-STATICFILES_STORAGE = 'config.custom_storages.StaticStorage'
-DEFAULT_FILE_STORAGE = 'config.custom_storages.MediaStorage'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_root'), ]
