@@ -2,14 +2,13 @@ from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DEBUG = os.environ.get('DEBUG')
 
-if DEBUG: 
-    STATIC_URL = '/static/'
-else:
-    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_STATIC_LOCATION)
+if eval(os.environ.get('PRODUCTION')): 
+    STATIC_URL = "https://%s/%s/" % (os.environ.get('AWS_S3_CUSTOM_DOMAIN'), os.environ.get('AWS_STATIC_LOCATION'))
     DEFAULT_FILE_STORAGE = 'config.custom_storages.MediaStorage'
     STATICFILES_STORAGE = 'config.custom_storages.StaticStorage'
+else:
+    STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'   

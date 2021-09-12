@@ -14,7 +14,6 @@ services:
         depends_on:
             - db
         command: /start
-
     db:
         image: postgres:13.0-alpine
         restart: always
@@ -24,6 +23,12 @@ services:
             POSTGRES_USER: tts
             POSTGRES_PASSWORD: tts
             POSTGRES_DB: tts
+        networks:
+            - networktts
 
 volumes:
     postgres_data:
+
+networks:
+    networktts:
+        driver: bridge

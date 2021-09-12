@@ -51,3 +51,5 @@ RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
 COPY . ${APP_HOME}
+
+RUN rm -rf ./test.txt ./.commands
