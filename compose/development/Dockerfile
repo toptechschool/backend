@@ -31,8 +31,7 @@
 # RUN pip install -r requirements.txt
 # COPY . .
 
-ARG PYTHON_VERSION=3.9-slim-buster
-FROM python:${PYTHON_VERSION} as python
+FROM python:3.9-slim-buster
 
 RUN apt-get update && apt-get install --no-install-recommends -y build-essential libpq-dev
 
@@ -51,5 +50,3 @@ RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
 COPY . ${APP_HOME}
-
-RUN rm -rf ./test.txt ./.commands

@@ -26,3 +26,23 @@ volumes:
 networks:
   networktts:
     driver: bridge
+
+
+
+        networks:
+      - networktts
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.envs/production.env
+    networks:
+      - networktts
+
+volumes:
+  postgres_data:
+
+networks:
+  networktts:
+    driver: bridge

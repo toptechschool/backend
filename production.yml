@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./compose/production/Dockerfile
+    env_file:
+      - ./.envs/production.env
+    ports:
+      - 80:8000
+    command: /start
