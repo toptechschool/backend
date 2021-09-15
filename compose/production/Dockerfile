@@ -1,5 +1,4 @@
-ARG PYTHON_VERSION=3.9-slim-buster
-FROM python:${PYTHON_VERSION} as python
+FROM python:3.9-slim-buster
 
 RUN apt-get update && apt-get install --no-install-recommends -y build-essential libpq-dev
 
