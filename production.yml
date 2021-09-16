@@ -10,27 +10,40 @@ services:
     ports:
       - 8000:8000
     command: /start
-  nginx:
+  nginx-proxy:
     build: ./nginx
     restart: always
     ports:
       - 80:80
       - 443:443
+    env_file:
+      - ./.envs/proxy.env  
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     depends_on:
       - web
-  nginx-proxy-letsencrypt:
+  acme-companion:
     image: jrcs/letsencrypt-nginx-proxy-companion
     env_file:
-      - ./.envs/proxy.env
+      - ./.envs/proxy.env  
+    volumes_from:
+      - nginx-proxy
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - certs:/etc/nginx/certs
-      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:rw
       - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
-      - nginx
+      - nginx-proxy
 
 volumes:
-  certs:
+  conf:
+  vhost:
   html:
+  dhparam:
+  certs:
   acme:

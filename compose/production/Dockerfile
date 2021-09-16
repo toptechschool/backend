@@ -9,7 +9,6 @@ WORKDIR ${APP_HOME}
 
 COPY ./compose/production/start /start
 COPY ./requirements.txt .
-COPY . ${APP_HOME}
 
 
 RUN apt-get update && apt-get install --no-install-recommends -y build-essential libpq-dev && \
@@ -19,6 +18,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y build-essential
     addgroup --system app && adduser --system --ingroup app app
 
 
+COPY . ${APP_HOME}
 USER app
 
 EXPOSE 8000
