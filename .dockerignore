@@ -9,3 +9,5 @@
 .travis.yml
 venv
 .commands
+/media
+/static
