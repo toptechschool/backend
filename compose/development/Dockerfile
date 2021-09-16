@@ -15,9 +15,6 @@ COPY . ${APP_HOME}
 RUN apt-get update && apt-get install --no-install-recommends -y build-essential libpq-dev &&\
     pip install -r requirements.txt &&\
     sed -i 's/\r$//g' /start &&\
-    chmod +x /start &&\
-    addgroup app && adduser --system --group app
-
-USER app
+    chmod +x /start
 
 EXPOSE 8000
