@@ -46,12 +46,16 @@ USER_TYPE_CHOICES = (
     (2, 'Candidate'),
 )
 
+import os
+def get_upload_path(instance,filename):
+    return 'profile_pics/'+str(instance.user.username)+'/'+filename
+
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     email_varified = models.BooleanField(default=False)
     name = models.CharField(max_length=50)
     bio = models.CharField(max_length=200,null=True,blank=True)
-    profile_pic = ResizedImageField(size=[1920, 1080], upload_to='profile_pics', default='default-profile.png')
+    profile_pic = ResizedImageField(size=[1920, 1080], upload_to=get_upload_path, default='default-profile.png')
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES,default=2)
 
     def save(self,*args,**kwargs):
