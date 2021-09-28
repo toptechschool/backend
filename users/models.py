@@ -1,12 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils.text import slugify
 from time import time
 from django_resized import ResizedImageField
 from users.manager import UserManager
-from django.contrib.sites.models import Site
 
 
 class User(AbstractBaseUser, PermissionsMixin):

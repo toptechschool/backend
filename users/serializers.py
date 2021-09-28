@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 from rest_framework import serializers
 from users.models import User, Profile
 
@@ -26,30 +27,23 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.Serializer):
     email = serializers.CharField()
-    password1 = serializers.CharField()
-    password2 = serializers.CharField()
+    password = serializers.CharField()
     user_type = serializers.IntegerField()
 
     def validate(self, data):
-        password1 = data['password1']
-        password2 = data['password2']
         email = data['email']
 
-        if(password1 != password2):
-            raise serializers.ValidationError("Password did not match")
-
         if(User.objects.filter(email=email).exists()):
-            raise serializers.ValidationError(
-                {"error": "This email is already registered"})
+            raise serializers.ValidationError("This email is already registered")
 
         return data
 
     def create(self, validated_data):
         email = validated_data['email']
-        password = validated_data['password1']
-        user = User.objects.create_user(email, password)
+        password = validated_data['password']
+        user_type = validated_data['user_type']
+        user = User.objects.create_user(email, password, user_type)
         user.save()
-        # Profile.objects.create(user=user, user_type=validated_data['user_type'])
         return user
 
 
