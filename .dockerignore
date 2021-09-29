@@ -11,3 +11,4 @@ venv
 .commands
 /media
 /static
+__pycache__

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from api.models.note import Note
 from users.models import User,Profile
 from .taggit import TagListSerializerField
+from users.serializers import ProfileSerializer
 
 
 class NoteDetailSerializer(serializers.ModelSerializer):
@@ -10,6 +11,7 @@ class NoteDetailSerializer(serializers.ModelSerializer):
     date_updated = serializers.DateTimeField(format="%Y-%m-%d")
     author = serializers.SerializerMethodField()
     like_count = serializers.IntegerField(source='get_liked_count')
+    
     class Meta:
         model = Note
         fields = '__all__'
@@ -17,7 +19,13 @@ class NoteDetailSerializer(serializers.ModelSerializer):
     def get_author(self,obj):
         profile = Profile.objects.get(user=obj.author)
         isAuthor = self.context['request'].user == obj.author
-        return {"name":profile.name,"avatar":profile.get_avatar,"bio":profile.bio,"username":obj.author.username,"isAuthor":isAuthor}
+        return { 
+            "name":profile.name,
+            "avatar":self.context['request'].build_absolute_uri(profile.profile_pic.url),
+            "bio":profile.bio,
+            "username":obj.author.username,
+            "isAuthor":isAuthor
+        }
 
 
 class NoteCreateSerializer(serializers.ModelSerializer):

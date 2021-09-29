@@ -49,7 +49,7 @@ def get_upload_path(instance,filename):
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     email_varified = models.BooleanField(default=False)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50,null=True,blank=True)
     bio = models.CharField(max_length=200,null=True,blank=True)
     profile_pic = ResizedImageField(size=[1920, 1080], upload_to=get_upload_path, default='default-profile.png')
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES,default=2)
@@ -64,9 +64,3 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.email}s Profile'
-
-    @property
-    def get_avatar(self):
-        return self.profile_pic.url
-
-
