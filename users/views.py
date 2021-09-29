@@ -68,7 +68,6 @@ class EmailActivationAPIView(views.APIView):
             profile = Profile.objects.get(user=user)
             profile.email_varified = True
             profile.save()
-            content = {'please move along': 'nothing to see here'}
             return Response({'msg': 'YES'}, status=status.HTTP_200_OK)
         else:
             return Response({'msg': 'NO'}, status=status.HTTP_400_BAD_REQUEST)

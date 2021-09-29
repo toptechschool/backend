@@ -41,9 +41,11 @@ class RegisterSerializer(serializers.Serializer):
     def create(self, validated_data):
         email = validated_data['email']
         password = validated_data['password']
-        user_type = validated_data['user_type']
-        user = User.objects.create_user(email, password, user_type)
+        user = User.objects.create_user(email, password)
         user.save()
+        profile = Profile.objects.get(user=user)
+        profile.user_type = validated_data['user_type']
+        profile.save()
         return user
 
 
@@ -53,14 +55,16 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         try:
-            User.objects.get(email=data['email'])
+            user = User.objects.get(email=data['email'])
+            if not user.is_active:
+                raise serializers.ValidationError("Admin deactivated your account")
         except ObjectDoesNotExist:
             raise serializers.ValidationError("Email is not register")
 
         user = authenticate(**data)
         if user is None:
             raise serializers.ValidationError("Please check email and password")
-        if not user.is_active:
-            raise serializers.ValidationError('This user has been deactivated by admin')
+        if not user.profile.email_varified:
+            raise serializers.ValidationError('Please varify your email address')
 
         return user
