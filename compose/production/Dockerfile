@@ -14,7 +14,8 @@ COPY ./requirements.txt .
 RUN pip install -r requirements.txt && \
     sed -i 's/\r$//g' /start && \
     chmod +x /start && \
-    addgroup --system app && adduser --system --ingroup app app
+    addgroup --system app && adduser --system --ingroup app app &&\
+    chmod -R +x /start
 
 COPY . ${APP_HOME}
 
