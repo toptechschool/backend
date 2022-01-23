@@ -1,5 +1,4 @@
 from django.urls import path
-from api.views.note import NoteListCreateAPIView,NoteRetrieveUpdateDestroyAPIView,NoteByUserAPIView,NoteLikeToggleAPIView,TagListAPIView
 from api.views.company import CompanyListCreateAPIView,CompanyRetrieveUpdateDestroyAPIView,CompanyLikeToggleAPIView
 from api.views.job import JobListCreateAPIView,JobRetrieveUpdateDestroyAPIView,JobLikeToggleAPIView
 from api.views.ranking import (
@@ -10,13 +9,6 @@ from api.views.ranking import (
 )
 
 urlpatterns = [
-    path('tags/', TagListAPIView.as_view(), name='tag-list'),
-
-    path('post/user/<str:username>/',NoteByUserAPIView.as_view(),name="note-list-username"),
-    path('post/<slug>/', NoteRetrieveUpdateDestroyAPIView.as_view(), name='note-detail-update'),
-    path('post/<int:id>/like-toggle/', NoteLikeToggleAPIView.as_view(), name='note-like-toggle'),
-    path('post/', NoteListCreateAPIView.as_view(), name='article-list-create'),
-    
     path('company/<str:slug>/', CompanyRetrieveUpdateDestroyAPIView.as_view(), name='company-detail-update'),
     path('company/<int:company_id>/like-toggle/', CompanyLikeToggleAPIView.as_view(), name='company-like-toggle'),
     path('company/', CompanyListCreateAPIView.as_view(), name='company-list-create'),
