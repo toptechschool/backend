@@ -18,6 +18,13 @@ services:
       - 443:443
     env_file:
       - ./.envs/proxy.env  
+    network_mode: bridge
+  nginx-proxy:
+    container_name: nginx-proxy
+    build: nginx
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
       - conf:/etc/nginx/conf.d
       - vhost:/etc/nginx/vhost.d

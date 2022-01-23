@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 from rest_framework import serializers
 from users.models import User, Profile
 
@@ -15,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    profile_pic = serializers.ImageField(max_length=None, use_url=True, allow_null=True, required=False)
 
     class Meta:
         model = Profile
@@ -26,30 +28,25 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.Serializer):
     email = serializers.CharField()
-    password1 = serializers.CharField()
-    password2 = serializers.CharField()
+    password = serializers.CharField()
     user_type = serializers.IntegerField()
 
     def validate(self, data):
-        password1 = data['password1']
-        password2 = data['password2']
         email = data['email']
 
-        if(password1 != password2):
-            raise serializers.ValidationError("Password did not match")
-
         if(User.objects.filter(email=email).exists()):
-            raise serializers.ValidationError(
-                {"error": "This email is already registered"})
+            raise serializers.ValidationError("This email is already registered")
 
         return data
 
     def create(self, validated_data):
         email = validated_data['email']
-        password = validated_data['password1']
+        password = validated_data['password']
         user = User.objects.create_user(email, password)
         user.save()
-        # Profile.objects.create(user=user, user_type=validated_data['user_type'])
+        profile = Profile.objects.get(user=user)
+        profile.user_type = validated_data['user_type']
+        profile.save()
         return user
 
 
@@ -59,14 +56,16 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         try:
-            User.objects.get(email=data['email'])
+            user = User.objects.get(email=data['email'])
+            if not user.is_active:
+                raise serializers.ValidationError("Admin deactivated your account")
         except ObjectDoesNotExist:
             raise serializers.ValidationError("Email is not register")
 
         user = authenticate(**data)
         if user is None:
             raise serializers.ValidationError("Please check email and password")
-        if not user.is_active:
-            raise serializers.ValidationError('This user has been deactivated by admin')
+        if not user.profile.email_varified:
+            raise serializers.ValidationError('Please varify your email address')
 
         return user

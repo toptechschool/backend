@@ -1,12 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils.text import slugify
 from time import time
 from django_resized import ResizedImageField
 from users.manager import UserManager
-from django.contrib.sites.models import Site
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -14,7 +11,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_approved = models.BooleanField(default=False)
     username = models.SlugField()
 
     objects = UserManager()
@@ -46,12 +42,16 @@ USER_TYPE_CHOICES = (
     (2, 'Candidate'),
 )
 
+import os
+def get_upload_path(instance,filename):
+    return 'profile_pics/'+str(instance.user.username)+'/'+filename
+
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     email_varified = models.BooleanField(default=False)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50,null=True,blank=True)
     bio = models.CharField(max_length=200,null=True,blank=True)
-    profile_pic = ResizedImageField(size=[1920, 1080], upload_to='profile_pics', default='default-profile.png')
+    profile_pic = ResizedImageField(size=[1920, 1080], upload_to=get_upload_path, default='default-profile.png')
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES,default=2)
 
     def save(self,*args,**kwargs):
@@ -64,9 +64,3 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.email}s Profile'
-
-    @property
-    def get_avatar(self):
-        return self.profile_pic.url
-
-
