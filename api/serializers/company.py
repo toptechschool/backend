@@ -2,13 +2,8 @@ from rest_framework import serializers
 from api.models import Company
 
 
-class VideoLinkListField(serializers.ListField):
-    def to_representation(self, data):
-        return ','.join(data.values_list('link', flat=True))
-
 class CompanyDetailSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='company-detail-update',lookup_field='slug')
-    get_video_links = VideoLinkListField(required=False)
     class Meta:
         model = Company
         fields = [
@@ -24,13 +19,11 @@ class CompanyDetailSerializer(serializers.ModelSerializer):
             'facebook_link',
             'twitter_link',
             'linkedin_link',
-            'get_video_links'
         ]
 
 
 class CompanyListSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='company-detail-update',lookup_field='slug')
-    get_video_links = VideoLinkListField(required=False)
     class Meta:
         model = Company
         fields = [
@@ -46,7 +39,6 @@ class CompanyListSerializer(serializers.ModelSerializer):
             'facebook_link',
             'twitter_link',
             'linkedin_link',
-            'get_video_links'
         ]
 
 

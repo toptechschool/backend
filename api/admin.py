@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import Company,VideoLink,Job,Question,Option,Quiz
+from api.models import Company,Job,Question,Option,Quiz
 
 
 @admin.register(Job)
@@ -20,5 +20,5 @@ class QuestionAdmin(admin.ModelAdmin):
 class QuizAdmin(admin.ModelAdmin):
     filter_horizontal = ('questions',)
 
+
 admin.site.register(Company)
-admin.site.register(VideoLink)

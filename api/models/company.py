@@ -6,7 +6,7 @@ from users.models import User
 
 
 class Company(models.Model):
-    admin = models.ForeignKey(User,on_delete=models.CASCADE)
+    admin = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     name = models.CharField(max_length=200)
     slug = models.SlugField()
     logo = ResizedImageField(size=[200, 200], upload_to='company_logo',force_format='PNG',default='post.jpg')
@@ -31,15 +31,3 @@ class Company(models.Model):
 
     def get_absolute_url(self):
         return reverse('company-detail-update', kwargs={'slug': self.slug})
-
-    @property
-    def get_video_links(self):
-        return VideoLink.objects.filter(company=self.pk)
-
-
-class VideoLink(models.Model):
-    company = models.ForeignKey(Company,on_delete=models.CASCADE)
-    link = models.URLField()
-
-    def __str__(self):
-        return self.link
