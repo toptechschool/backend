@@ -11,14 +11,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y build-essential
 
 COPY ./compose/production/start /start
 COPY ./requirements.txt .
-<<<<<<< HEAD
-
-
-RUN apt-get update && apt-get install --no-install-recommends -y build-essential libpq-dev && \
-    pip install -r requirements.txt && \
-=======
 RUN pip install -r requirements.txt && \
->>>>>>> init
     sed -i 's/\r$//g' /start && \
     chmod +x /start && \
     addgroup --system app && adduser --system --ingroup app app &&\

@@ -1,7 +1,7 @@
 from rest_framework.pagination import PageNumberPagination
 
 
-class NotePageNumberPagination(PageNumberPagination):
+class BlogPageNumberPagination(PageNumberPagination):
     page_size = 9
 
 class CompanyPageNumberPagination(PageNumberPagination):

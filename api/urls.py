@@ -1,5 +1,6 @@
 from django.urls import path
 from api.views.company import CompanyListCreateAPIView,CompanyRetrieveUpdateDestroyAPIView,CompanyLikeToggleAPIView
+from api.views.blog import BlogListCreateAPIView, BlogRetrieveUpdateDestroyAPIView, BlogByUserAPIView, BlogLikeToggleAPIView, TagListAPIView
 from api.views.job import JobListCreateAPIView,JobRetrieveUpdateDestroyAPIView,JobLikeToggleAPIView
 from api.views.ranking import (
     QuestionListCreateAPIView,
@@ -9,6 +10,11 @@ from api.views.ranking import (
 )
 
 urlpatterns = [
+    path('blog/user/<str:username>/',BlogByUserAPIView.as_view(),name="blog-list-username"),
+    path('blog/<slug>/', BlogRetrieveUpdateDestroyAPIView.as_view(), name='blog-detail-update'),
+    path('blog/<int:id>/like-toggle/', BlogLikeToggleAPIView.as_view(), name='blog-like-toggle'),
+    path('blog/', BlogListCreateAPIView.as_view(), name='blog-list-create'),
+
     path('company/<str:slug>/', CompanyRetrieveUpdateDestroyAPIView.as_view(), name='company-detail-update'),
     path('company/<int:company_id>/like-toggle/', CompanyLikeToggleAPIView.as_view(), name='company-like-toggle'),
     path('company/', CompanyListCreateAPIView.as_view(), name='company-list-create'),

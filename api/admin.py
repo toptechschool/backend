@@ -1,7 +1,14 @@
 from django.contrib import admin
-from api.models import Company,Job,Question,Option,Quiz
+from api.models import Company,Job,Question,Option,Quiz, Blog
 
 
+@admin.register(Blog)
+class NoteAdmin(admin.ModelAdmin):
+    list_display = ['title','author','date_updated','views']
+    list_filter = ['approved','featured','date_updated']
+    search_fields = ['title','content','tags']
+    ordering = ['date_updated']
+    prepopulated_fields = {'slug': ('title',)}
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
     list_display = ['company','title']
