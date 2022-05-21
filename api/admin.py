@@ -21,4 +21,6 @@ class QuizAdmin(admin.ModelAdmin):
     filter_horizontal = ('questions',)
 
 
-admin.site.register(Company)
+@admin.register(Company)
+class CompanyAdmin(admin.ModelAdmin):
+    readonly_fields = ['slug',]
