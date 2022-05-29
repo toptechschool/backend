@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from api.models.blog import Blog
 from users.models import Profile
+from users.serializers import ProfileSerializer
 from .taggit import TagListSerializerField
 
 
@@ -18,8 +19,11 @@ class BlogDetailSerializer(serializers.ModelSerializer):
     def get_author(self,obj):
         profile = Profile.objects.get(user=obj.author)
         isAuthor = self.context['request'].user == obj.author
-        return {"name":profile.name, "avatar":profile.get_avatar, "bio":profile.bio, "username":obj.author.username, "isAuthor":isAuthor}
-
+        return {"name":profile.name, "avatar": self.context['request'].build_absolute_uri(profile.profile_pic.url), "bio":profile.bio, "username":obj.author.username, "isAuthor":isAuthor}
+    # def get_author(self,obj):
+    #     profile = Profile.objects.get(user=obj.author)
+    #     serializer = ProfileSerializer(profile).data
+    #     return serializer
 
 class BlogCreateSerializer(serializers.ModelSerializer):
     tags = TagListSerializerField(required=False)
@@ -32,7 +36,7 @@ class BlogCreateSerializer(serializers.ModelSerializer):
 
 class BlogListSerializer(serializers.ModelSerializer):
     tags = TagListSerializerField(required=False)
-    url = serializers.HyperlinkedIdentityField(view_name='note-detail-update',lookup_field='slug')
+    url = serializers.HyperlinkedIdentityField(view_name='blog-detail-update',lookup_field='slug')
     author = serializers.SerializerMethodField()
     date_posted = serializers.DateTimeField(format="%Y-%m-%d")
     date_updated = serializers.DateTimeField(format="%Y-%m-%d")
@@ -48,7 +52,7 @@ class BlogListSerializer(serializers.ModelSerializer):
 
 class BlogListUserSerializer(serializers.ModelSerializer):
     tags = TagListSerializerField(required=False)
-    url = serializers.HyperlinkedIdentityField(view_name='note-detail-update', lookup_field='slug')
+    url = serializers.HyperlinkedIdentityField(view_name='blog-detail-update', lookup_field='slug')
     
     class Meta:
         model = Blog

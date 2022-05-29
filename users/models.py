@@ -42,7 +42,6 @@ USER_TYPE_CHOICES = (
     (2, 'Candidate'),
 )
 
-import os
 def get_upload_path(instance,filename):
     return 'profile_pics/'+str(instance.user.username)+'/'+filename
 
